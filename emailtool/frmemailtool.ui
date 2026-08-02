@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>frmEmailTool</class>
+ <widget class="QWidget" name="frmEmailTool">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>764</width>
+    <height>578</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="2" column="0">
+      <widget class="QLabel" name="labTitle">
+       <property name="text">
+        <string>邮件标题</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="labServer">
+       <property name="text">
+        <string>服务地址</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="3">
+      <widget class="QLineEdit" name="txtReceiverAddr">
+       <property name="text">
+        <string>feiyangqingyun@163.com;517216493@qq.com</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLabel" name="labPort">
+       <property name="text">
+        <string>服务端口</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="txtTitle">
+       <property name="text">
+        <string>测试邮件</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1" colspan="3">
+      <widget class="QLineEdit" name="txtFileName"/>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="labFileName">
+       <property name="text">
+        <string>选择附件</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QLabel" name="labReceiverAddr">
+       <property name="text">
+        <string>收件地址</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="labSenderAddr">
+       <property name="text">
+        <string>用户名称</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLabel" name="labSenderPwd">
+       <property name="text">
+        <string>用户密码</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QComboBox" name="cboxPort">
+       <property name="modelColumn">
+        <number>0</number>
+       </property>
+       <item>
+        <property name="text">
+         <string>25</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>465</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>587</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="3" column="4">
+      <widget class="QPushButton" name="btnSelect">
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="text">
+        <string>浏览</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="4">
+      <widget class="QPushButton" name="btnSend">
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="text">
+        <string>发送</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="cboxServer">
+       <item>
+        <property name="text">
+         <string>smtp.163.com</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>smtp.126.com</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>smtp.qq.com</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>smt.sina.com</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>smtp.sohu.com</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>smtp.139.com</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>smtp.189.com</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="1" column="4">
+      <widget class="QCheckBox" name="ckSSL">
+       <property name="text">
+        <string>SSL</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QLineEdit" name="txtSenderPwd">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="echoMode">
+        <enum>QLineEdit::EchoMode::Password</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="txtSenderAddr">
+       <property name="text">
+        <string>feiyangqingyun@126.com</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QTextBrowser" name="txtContent">
+     <property name="readOnly">
+      <bool>false</bool>
+     </property>
+     <property name="html">
+      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+hr { height: 1px; border-width: 0; }
+li.unchecked::marker { content: &quot;\2610&quot;; }
+li.checked::marker { content: &quot;\2612&quot;; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#ffffff;&quot;&gt;&lt;span style=&quot; font-family:'Monaspace Neon','ui-monospace','SFMono-Regular','SF Mono','Menlo','Consolas','Liberation Mono','monospace'; font-size:12px; color:#1f2328; background-color:#ffffff;&quot;&gt;其他说明：163邮箱和126邮箱，发送端口都是25，不使用SSL协议，而QQ邮箱必须使用SSL协议，端口为465。如果是QQ邮箱发送的话，前提要在QQ邮箱设置中将smtp协议开通，否则发送不成功，我就困在这里半个小时，结果收到QQ邮箱发过来的一封邮件，你妹啊，默认QQ邮箱没有开启SMTP服务。&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#ffffff;&quot;&gt;&lt;span style=&quot; font-family:'Monaspace Neon','ui-monospace','SFMono-Regular','SF Mono','Menlo','Consolas','Liberation Mono','monospace'; font-size:12px; color:#1f2328; background-color:#ffffff;&quot;&gt;用户密码部分输入的是授权码！&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;端口只与发件人（用户）有关，收件地址可以是任意邮箱。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>txtSenderAddr</tabstop>
+  <tabstop>txtSenderPwd</tabstop>
+  <tabstop>cboxServer</tabstop>
+  <tabstop>cboxPort</tabstop>
+  <tabstop>ckSSL</tabstop>
+  <tabstop>txtTitle</tabstop>
+  <tabstop>txtReceiverAddr</tabstop>
+  <tabstop>btnSend</tabstop>
+  <tabstop>txtFileName</tabstop>
+  <tabstop>btnSelect</tabstop>
+  <tabstop>txtContent</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>
