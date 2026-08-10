@@ -137,7 +137,7 @@
          </font>
         </property>
         <property name="text">
-         <string>测试结果</string>
+         <string>测试结果:O.O</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignmentFlag::AlignCenter</set>

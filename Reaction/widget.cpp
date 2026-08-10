@@ -20,10 +20,10 @@ Widget::Widget(QWidget *parent)
 
     // 2. 连接信号与槽
     connect(ui->pbt_strat, &QPushButton::clicked,
-            this, &Widget::onStartClicked);
+            this, &Widget::onStartClicked); //点击按钮后触发
 
     connect(ui->widget, &ColorFlashWidget::panelClicked,
-            this, &Widget::onPanelClicked);
+            this, &Widget::onPanelClicked); //点击色块后触发
 
 
 }
@@ -37,7 +37,7 @@ void Widget::onStartClicked()
 {
     if (m_isTesting) return; // 如果正在测试中，忽略点击
 
-    ui->output_value->setText("");
+    ui->output_value->setText("测试结果：O.O");
 
     m_isTesting = true;
     m_colorChanged=false;//重置为未变色状态
@@ -45,54 +45,44 @@ void Widget::onStartClicked()
     //ui->reminder->setText("等待..."); //reminder不属于主窗口，不建议这样调用
     ui->widget->setFeedbackText("等待...");
 
-    // 重置色块颜色（比如变回红色或灰色）
-    ui->widget->reset();
+    ui->widget->reset(); // 重置色块颜色（比如变回红色或灰色）
 
-
-    // 生成 1000ms 到 4000ms 之间的随机延迟
-    int randomDelay = QRandomGenerator::global()->bounded(1000, 4000);
+    // 生成 2000ms 到 4000ms 之间的随机延迟
+    int randomDelay = QRandomGenerator::global()->bounded(2000, 4000);
 
     // 使用单次定时器，延迟结束后执行 Lambda 表达式
+    //QTimer::singleShot：创建一个只触发一次的定时器（不是循环的）
+    //this:上下文对象，如果窗口被关闭/销毁，这个定时器会自动取消，防止崩溃。
+    //[this]:Lambda表达式,捕获this指针，让花括号里能访问ui、m_timer等成员
     QTimer::singleShot(randomDelay, this, [this]() {
         if (!m_isTesting) return; // 安全检查
 
-        // A. 变色！
-        ui->widget->flash(Qt::green);
+        ui->widget->flash(Qt::green);// A. 让色块变色！
 
-        // B. 启动高精度计时器
-        m_timer.start();
-        m_colorChanged=true;//变色后，标记为true
+        m_timer.start();// B. 启动高精度计时器。从这里开始记录时间，后面用户点击时，用m_timer.nsecsElapsed()算出过了多少纳秒
+        m_colorChanged=true;//变色后，标记为true。这是抢跑的关键检测。m_colorChanged==false点击，判定为抢跑
         //ui->reminder->setText("快点击！");
-        ui->widget->setFeedbackText("快点击！");
+        ui->widget->setFeedbackText("快点击！"); //显示提示文字
     });
 }
 
-void Widget::onPanelClicked() //用户点击响应
+void Widget::onPanelClicked() //用户点击色块后执行该函数
 {
     // 只有在测试进行中（且已经变色后）点击才有效
-    // 注意：这里有个细节，如果用户在变色前点击怎么办？
-    // 通常反应测试允许“抢跑”，但简单起见，我们只处理变色后的点击
-    // 如果需要防抢跑，需要增加一个 m_isWaitingForColor 标志
-
     if (!m_isTesting) return;
 
     //抢跑判断逻辑
     if (!m_colorChanged) {
-        // 1. 输出错误值或提示
-        ui->output_value->setText("抢跑无效！");
-
-        // 2. 在色块中间显示 "抢跑了！"
-        ui->widget->setFeedbackText("抢跑了！");
-
-        // 3. 结束本次测试，允许重新开始
-        m_isTesting = false;
+        ui->output_value->setText("抢跑无效！");// 1. 输出错误值或提示
+        ui->widget->setFeedbackText("抢跑了！"); // 2. 在色块中间显示 "抢跑了！"
+        m_isTesting = false;// 3. 结束本次测试，允许重新开始
         ui->pbt_strat->setEnabled(true);
         return; // 直接返回，不计算时间
     }
-
     // 计算耗时（纳秒转毫秒）
-    qint64 nsecs = m_timer.nsecsElapsed();
-    double msecs = nsecs / 1000000.0;
+    //qint64是64位整数，能存下很大的数值（即使几小时也绰绰有余）
+    qint64 nsecs = m_timer.nsecsElapsed(); //获取经过的时间，纳秒
+    double msecs = nsecs / 1000000.0;//换算成毫秒
 
     // 显示结果
     ui->output_value->setText(QString("%1 ms").arg(msecs, 0, 'f', 1));
@@ -110,15 +100,11 @@ void Widget::onPanelClicked() //用户点击响应
     } else if (msecs > 200) {
        feedback = "😴 下等马";
        ui->output_value->setText(QString("下等马! %1 ms").arg(msecs, 0, 'f', 1));
-
-
     }
 
     ui->widget->setFeedbackText(feedback);
 
-
-    // 恢复状态
-    m_isTesting = false;
+    m_isTesting = false; // 恢复状态
     ui->pbt_strat->setEnabled(true);
 
     // 可选：点击后立即变回红色，或者保持绿色直到下次开始

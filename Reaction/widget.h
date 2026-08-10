@@ -26,7 +26,7 @@ public:
 private:
     Ui::Widget *ui;
     QElapsedTimer m_timer;//成员变量
-    bool m_isTesting=false; //状态标志，防止重复点击或提前点击
+    bool m_isTesting=false; //状态标志，防止重复点击或提前点击；相当于锁
     bool m_colorChanged=false;//标记是否变色
 
 
