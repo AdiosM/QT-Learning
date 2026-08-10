@@ -1,6 +1,0 @@
-1. git init
-2. git remote -v (检查关联的仓库)
-3.git pull origin main --allow-unrelated-histories
-4.git add 待上传的文件夹/
-5.git commit -m "Add Reaction project"
-6.git push -u origin main
