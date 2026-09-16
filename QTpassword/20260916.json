@@ -1,0 +1,29 @@
+[
+    {
+        "category": "软件",
+        "favorite": false,
+        "notes": "dfdsfs",
+        "password": "123456",
+        "title": "ChickenBond",
+        "url": "chicken.com",
+        "username": "何东凌"
+    },
+    {
+        "category": "工作",
+        "favorite": false,
+        "notes": "",
+        "password": "t5657577",
+        "title": "unra",
+        "url": "dfjslg.com",
+        "username": "AdiosM"
+    },
+    {
+        "category": "工作",
+        "favorite": false,
+        "notes": "",
+        "password": "4566",
+        "title": "QQ",
+        "url": "qq.com",
+        "username": "君问归期未有期"
+    }
+]
