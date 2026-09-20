@@ -43,8 +43,7 @@ void LoginDialog::setupUi()
             );
 
 
-    passwordEdit =
-        new QLineEdit(this);
+    passwordEdit =  new QLineEdit(this);
 
     passwordEdit->setEchoMode(QLineEdit::Password);
 

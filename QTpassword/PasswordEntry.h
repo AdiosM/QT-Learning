@@ -1,5 +1,6 @@
 #ifndef PASSWORDENTRY_H
 #define PASSWORDENTRY_H
+//密码条目数据结构，以及允许进行的操作（读取、修改）
 
 #include<QString>
 #include<QDialog>
@@ -26,16 +27,18 @@ public:
     QString notes() const;
     QString category()const;
 
+    //修改内容
     void setTitle(const QString &title);
     void setUsername(const QString &username);
     void setPassword(const QString &password);
     void setUrl(const QString &url);
     void setNotes(const QString &notes);
     void setFavorite(bool favorite);
-    bool favorite()const;
+    bool favorite()const; //判断该密码条目是否被收藏
 
 
 private:
+    //一条密码记录的结构：名称、用户名、密码、url、备注、分类、是否收藏
     QString m_title;
     QString m_username;
     QString m_password;

@@ -1,7 +1,15 @@
 #ifndef PASSWORDMODEL_H
 #define PASSWORDMODEL_H
 
-//数据和QT界面之间的中间层，告诉QT数据是什么，以及表格应该如何读取这些数据
+//数据和QT界面之间的中间层，告诉QT数据是什么，以及表格应该如何读取这些数据。管理密码记录。
+/***主要负责：
+ * 保存PasswordEntry数据结构(密码条目)
+ * 给QTableView提供数据显示
+ * 增加、修改、删除密码条目
+ * 加载数据库
+ * 同步数据库
+ * 管理数据库ID
+ ***/
 
 #include <QAbstractTableModel>
 #include <QVector>
@@ -10,7 +18,8 @@
 #include "DatabaseManager.h"
 
 class PasswordModel:public QAbstractTableModel
-{
+{//QAbstractTableModel为以二维数据项数组形式组织数据的模型提供标准接口，是一个表格型数据模型
+    //我们这里设计的表格是一个行 X 列的表格，所以继承QAbstractTableModel
     Q_OBJECT
 
 public:
@@ -20,7 +29,9 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex())const override; //有多少列
 
     QVariant data(const QModelIndex &index,int role = Qt::DisplayRole)const override;//第几行第几列显示什么数据
-    //QVariant是Qt用来统一保存/传递不同类型数据的一个类型，Qt可以把很多常见类型放进QVariant
+    //index表示Model中的某一个数据位置，主要包含（row,column）;role表示想从这个位置获取什么类型的数据
+    //QVariant是Qt用来统一保存/传递不同类型数据的一个类型，Qt可以把很多常见类型放进QVariant，是一个通用容器
+
     QVariant headerData(
         int section,
         Qt::Orientation orientation,
@@ -30,6 +41,7 @@ public:
     void addEntry(const PasswordEntry &entry);//添加密码条目
     void updateEntry(int row,const PasswordEntry &entry);//修改密码条目
     void removeEntry(int row);//删除密码
+
     const PasswordEntry &entryAt(int row)const;//获取某一行的数据
 
     void loadFromDatabase();//PasswordModel从数据库获取数据的入口，
@@ -43,7 +55,7 @@ public:
 
 private:
     QVector<PasswordEntry>entries;//用于存储密码信息的容器,保存当前程序正在显示的密码数据
-    QVector<int>entryIds;//用来保存每一条PasswordEntry对应的SQLite数据库ID
+    QVector<int>entryIds;//用来保存每一条PasswordEntry对应的SQLite数据库ID，entries[0]与entriesIds[0]必须一一对应
 
     DatabaseManager databaseManager;//PasswordModel用来操作SQLite数据库的对象
 };

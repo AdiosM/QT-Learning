@@ -16,42 +16,38 @@ PasswordModel::PasswordModel(QObject *parent)
     loadFromDatabase();
 }
 
-int PasswordModel::rowCount(
-    const QModelIndex &parent
-    ) const
+int PasswordModel::rowCount( const QModelIndex &parent)const
 {
     Q_UNUSED(parent);
 
     return entries.size();
 }
 
-int PasswordModel::columnCount(
-    const QModelIndex &parent
-    ) const
+int PasswordModel::columnCount(const QModelIndex &parent)const
 {
     Q_UNUSED(parent);
 
-    return 5;
+    return 5;//5列，我们自己设计的，是固定的
 }
 
-QVariant PasswordModel::data( const QModelIndex &index,int role) const
-{
-    if (!index.isValid())
-    {
+QVariant PasswordModel::data( const QModelIndex &index,int role)const
+{//负责回答：“某一行，某一列的数据是什么”
+    if (!index.isValid())//判断数据位置的有效性，
+    {//无效则返回一个空的QVariant
         return QVariant();
     }
 
-    if(role==Qt::UserRole)
+    if(role==Qt::UserRole)//该密码条目是否被收藏
     {
-        return entries[index.row()].favorite();
+        return entries[index.row()].favorite();//返回一个bool值
     }
 
-    if (role != Qt::DisplayRole)
-    {
-        return QVariant();
+    if (role != Qt::DisplayRole)//DisplayRole是Qt自带的枚举值
+    {//如果调用者请求的不是“用于显示的数据”，并且前面也不是 UserRole，那么这个 Model 不处理。
+        return QVariant();//返回空数值
     }
 
-    const PasswordEntry &entry = entries[index.row()];
+    const PasswordEntry &entry = entries[index.row()];//获取这一行的密码条目信息
 
     switch (index.column())
     {

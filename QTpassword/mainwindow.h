@@ -1,5 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+//主界面及交互逻辑
+
 
 #include <QMainWindow>
 #include <QModelIndex>

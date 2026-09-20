@@ -117,7 +117,7 @@ void MainWindow::setupUi()//场景程序主界面
 
 
     //创建右侧面板----------
-    QVBoxLayout *rightLayout = new QVBoxLayout(rightPanel);//添加到垂直布局中
+    QVBoxLayout *rightLayout = new QVBoxLayout(rightPanel);//将右侧面板添加到垂直布局中
 
     //创建“密码列表”标题
     QLabel *listTitleLabel = new QLabel("密码列表", rightPanel);
@@ -132,10 +132,10 @@ void MainWindow::setupUi()//场景程序主界面
 
     //======创建密码表格=======
     passwordModel = new PasswordModel(this); //MainWindow是PasswordModel的父对象，这样关闭主窗口会自动释放资源
-    proxyModel = new PasswordFilterProxyModel(this);
+    proxyModel = new PasswordFilterProxyModel(this);//数据代理
     proxyModel->setSourceModel(passwordModel);//设置proxyModel的数据来源--passwordModel
-    passwordTable = new QTableView(rightPanel);
-    passwordTable->setModel(proxyModel);
+    passwordTable = new QTableView(rightPanel);//QTableView负责显示数据
+    passwordTable->setModel(proxyModel);//passwordTable今后的所有数据都去proxyModel里面访问
 
     //表格显示设置
     passwordTable->horizontalHeader() ->setSectionResizeMode(QHeaderView::Stretch);//设置表格列宽策略，horizontalHeader()：获取水平表头对象。
@@ -379,8 +379,16 @@ void MainWindow::deleteEntry()
 
             currentPassword.clear();
             passwordVisible = false;
-
+//列表为空时，收藏、编辑、删除按钮不可操作
             showPasswordButton->setText("显示密码");
+            favoriteButton->setEnabled(false);
+            editButton->setEnabled(false);
+            deleteButton->setEnabled(false);
+            showPasswordButton->setEnabled(false);
+            copyPasswordButton->setEnabled(false);
+            favoriteButton->setText("收藏");
+            showPasswordButton->setText("显示密码");
+            passwordVisible = false;
         }
     }
 }

@@ -1,6 +1,6 @@
 #ifndef LOGINDIALOG_H
 #define LOGINDIALOG_H
-//实现启动软件后，弹出一个登录对话框
+//实现启动软件后，弹出一个登录对话框。主密码登录
 
 #include<QDialog>
 
@@ -17,14 +17,10 @@ public:
 
 private:
     void setupUi();
-
     void handleConfirm();
-
     bool isFirstRun() const;
 
-    QString passwordHash(
-        const QString &password
-        ) const;
+    QString passwordHash( const QString &password)const;
 
 private:
     QLineEdit *passwordEdit;

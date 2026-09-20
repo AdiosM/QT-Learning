@@ -1,5 +1,6 @@
 #ifndef DATABASEMANAGER_H
 #define DATABASEMANAGER_H
+//负责SQLite数据操作
 
 #include <QString>
 #include <QVector>
