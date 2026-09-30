@@ -1,0 +1,21 @@
+# Build output and Qt Creator local settings
+/build*/
+/.qtcreator/
+CMakeLists.txt.user*
+*.pro.user*
+*.autosave
+
+# Generated binaries and compiler output
+*.exe
+*.dll
+*.o
+*.obj
+*.a
+*.pdb
+moc_*.cpp
+ui_*.h
+qrc_*.cpp
+
+# Local models and logs
+*.gguf
+*.log
