@@ -36,7 +36,7 @@ QString resolveFilePath(const char *environmentVariable, const QStringList &cand
 }
 } // namespace
 
-void MainWindow::startModel()
+void MainWindow::startModel()//程序刚启动，在mainwindow.cpp的构造函数中被调用
 {
     const QDir applicationDir(QCoreApplication::applicationDirPath());
     QStringList serverCandidates{
@@ -133,12 +133,16 @@ void MainWindow::startModel()
                     );
             });
 
+    //创建定时器，父对象为当前窗口
     healthTimer = new QTimer(this);
-    healthTimer->setInterval(1000);
+    healthTimer->setInterval(1000);//每隔1秒检查一次
 
+    //通过healthTimer定时器，每隔1秒调用checkModelReady()
     connect(healthTimer, &QTimer::timeout,
-            this, &MainWindow::checkModelReady);
+            this, &MainWindow::checkModelReady);//定时器触发时（即调用healthTimer->start()），调用检查函数checkModelReady
 
+    //当模型进程成功启动，发出 QProcess::started 信号时，执行Lambda中的两条语句。
+    //注意，执行connect()时只是建立连接，还不会执行里面的 healthTimer->start()。
     connect(modelProcess, &QProcess::started, this, [this]() {
         healthTimer->start();
         checkModelReady();
@@ -164,7 +168,19 @@ void MainWindow::startModel()
     statusBar()->showMessage(QStringLiteral("正在加载本地翻译模型……"));
 
     loadingClock.start();
-    modelProcess->start();
+    modelProcess->start();//启动llama-server.exe
+/*进程成功启动后，才触发前面连接的回调
+ * modelProcess->start()
+    ↓
+        llama-server.exe 进程成功启动
+    ↓
+          发出 started 信号
+    ↓
+          执行 Lambda
+    ├─ healthTimer->start()：启动每秒一次的检查
+    └─ checkModelReady()：立即检查一次
+*/
+    //进程成功启动，不代表模型已经加载完成，所以这时需要启动定时器，持续检查模型是否准备好。
 }
 
 void MainWindow::checkModelReady()
