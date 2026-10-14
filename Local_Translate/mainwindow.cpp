@@ -205,21 +205,31 @@ void MainWindow::translate()
 
     if (source != QStringLiteral("自动检测")) {
         prompt += QStringLiteral("源语言为%1。\n").arg(source);
-    }
+    }//如果用户明确选择源语言，就把它加入提示词。arg(source) 将 %1 替换为具体语言。
 
     prompt += QStringLiteral(
                   "将以下文本翻译为%1，"
                   "注意只需要输出翻译后的结果，不要额外解释：\n\n"
-                  ).arg(target);
+                  ).arg(target);//给翻译模型的提示词
 
-    prompt += text;
+    prompt += text;//用户输入的文本，一起存放到prompt中
 
+    //将任务组织成 JSON
     QJsonArray messages;
     messages.append(QJsonObject{
         {"role", "user"},
         {"content", prompt}
     });
+ /*对应的结构，JSON
+[
+  {
+    "role": "user",
+    "content": "翻译指令和原文"
+  }
+]
+ */
 
+    //整个请求体
     QJsonObject body{
         {"model", "hy-mt"},
         {"messages", messages},
@@ -230,16 +240,27 @@ void MainWindow::translate()
         {"repeat_penalty", 1.05},
         {"max_tokens", 4096}  //限制最大输出长度
     };
+/*
+| 字段     |             作用 |
+| `model` | 指定服务启动时设置的模型别名 |
+| `messages` | 提交翻译指令和原文 |
+| `stream` | 使用非流式响应，完成后统一处理结果 |
+| `temperature`、`top_p`、`top_k` | 设置生成时的采样参数 |
+| `repeat_penalty` | 设置重复惩罚参数 |
+| `max_tokens` | 限制最大生成 token 数，不等于字符数 |
+*/
 
     QNetworkRequest request{
         QUrl(QStringLiteral(
             "http://127.0.0.1:8080/v1/chat/completions"
             ))
     };//请求发送到本机8080端口的翻译模型
+
+    //创建请求描述，指定目标为本机模型服务的翻译接口。还未发送请求
     request.setHeader(
         QNetworkRequest::ContentTypeHeader,
         QStringLiteral("application/json")
-        );
+        );//告诉服务端，这次请求使用JSON格式
 
     translateButton->setEnabled(false);
     translateButton->setText(QStringLiteral("翻译中……"));
@@ -250,26 +271,29 @@ void MainWindow::translate()
     targetLanguage->setEnabled(false);
     translatedText->clear();
 
+    //发送请求
     QNetworkReply *reply = networkManager->post(
         request,
         QJsonDocument(body).toJson(QJsonDocument::Compact)
-        );
+        );//QJsonDocument(body)...将JSON对象序列化为字节数据。Compact表示省略不必要的缩进和空白
+//reply 返回时，不代表译文已经生成。
 
     // 整个请求最多等待 5 分钟，可按机器性能调整。
-    auto *timer = new QTimer(reply);
+    auto *timer = new QTimer(reply);//设置超时处理，reply为父对象
     timer->setSingleShot(true);
 
-    // 绑定超时逻辑：如果时间到了，就执行这里
+    //超时处理：绑定超时逻辑：如果时间到了，就执行这里
     connect(timer, &QTimer::timeout, reply, [reply]() {
-        reply->setProperty("timedOut", true);
+        reply->setProperty("timedOut", true);//将timerout标记为true,因为请求被取消不是超时，用这个来区分
         reply->abort();//强制掐断网络连接
     });
 
+    //请求结束后回调：当reply发出finished信号时，执行Lambda中的代码
     connect(reply, &QNetworkReply::finished,
             this, [this, reply, timer]() {
-                timer->stop();
+                timer->stop();//停止计时
 
-                translateButton->setEnabled(modelReady);
+                translateButton->setEnabled(modelReady);//按钮是否可点击，取决于modelReady
                 translateButton->setText(
                     modelReady?QStringLiteral("翻译"):QStringLiteral("模型不可用"));
 
@@ -277,18 +301,19 @@ void MainWindow::translate()
                 sourceLanguage->setEnabled(true);
                 targetLanguage->setEnabled(true);
 
-                const QByteArray response = reply->readAll();
+                //读取响应并安排对象清理
+                const QByteArray response = reply->readAll();//读取这次网络请求返回的响应体，并保存到response中
                 const int status = reply->attribute(
                                             QNetworkRequest::HttpStatusCodeAttribute
-                                            ).toInt();
+                                            ).toInt();//读取HTTP 状态码，例如 200。如果没有收到有效 HTTP 响应，这里不一定能取得有效状态码。
 
-                const bool timedOut =
-                    reply->property("timedOut").toBool();
+                const bool timedOut = reply->property("timedOut").toBool();//读取之前设置在 reply 上的 "timedOut" 属性，并转换成 bool。
+                //如果超时回调执行过，这里通常是 true；否则是 false。后面用它判断是否要提示“翻译超时”。
 
-                const auto networkError = reply->error();
-                const QString errorText = reply->errorString();
+                const auto networkError = reply->error();//读取网络请求的错误代码
+                const QString errorText = reply->errorString(); //读取网络错误的文字说明
 
-                reply->deleteLater();
+                reply->deleteLater();//安排稍后删除响应对象，而不是当场删除。
 
                 if (timedOut) {
                     QMessageBox::warning(
@@ -374,5 +399,5 @@ void MainWindow::translate()
                 }
             });
 
-    timer->start(5 * 60 * 1000);//启动定时器，5分钟
+    timer->start(5 * 60 * 1000);//启动定时器，5分钟。超时等待时间是5分钟
 }
